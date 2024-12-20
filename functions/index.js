@@ -5,7 +5,7 @@ const cors = require("cors");
 admin.initializeApp();
 const db = admin.firestore();
 
-const allowedOrigins = ["http://localhost:5173/", "https://your-hosted-domain.com"];
+const allowedOrigins = ["http://localhost:5173", "https://your-hosted-domain.com"];
 
 const corsOptions = {
   origin: (origin, callback) => {
