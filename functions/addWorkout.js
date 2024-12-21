@@ -2,9 +2,6 @@ const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 const cors = require("cors");
 
-admin.initializeApp();
-// const db = admin.firestore();
-
 const allowedOrigins = ["http://localhost:5173", "https://your-hosted-domain.com"];
 
 const corsOptions = {
