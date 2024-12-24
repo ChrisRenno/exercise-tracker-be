@@ -15,6 +15,8 @@ const corsOptions = {
   },
 };
 
+// TODO: Make sure userId matches the user's ID
+
 exports.getSingleWorkout = functions.https.onRequest((req, res) => {
   cors(corsOptions)(req, res, async () => {
     if (req.method === "OPTIONS") {
@@ -30,13 +32,19 @@ exports.getSingleWorkout = functions.https.onRequest((req, res) => {
       if (!workoutId) {
         return res.status(400).send("Workout ID is required");
       }
+      const userID = req.query.userId;
+      if (!userID) {
+        return res.status(400).send("User ID is required");
+      }
 
-      const doc = await db.collection("workouts").doc(workoutId).get();
-      if (!doc.exists) {
+      const querySnapshot = await db.collection("workouts")
+          .where("id", "==", workoutId)
+          .where("userID", "==", userID).get();
+      if (querySnapshot.empty) {
         return res.status(404).send("Workout not found");
       }
 
-      const data = doc.data();
+      const data = querySnapshot.docs[0].data();
       res.status(200).json(data);
     } catch (error) {
       res.status(500).send(error.toString());

@@ -32,7 +32,7 @@ exports.getWorkoutsByUserId = functions.https.onRequest((req, res) => {
       }
 
       const snapshot = await db.collection("workouts")
-          .where("userID", "==", userId).get();
+          .where("userID", "==", userId).orderBy("date", "desc").get();
       const data = snapshot.docs.map((doc) => doc.data());
       res.status(200).json(data);
     } catch (error) {

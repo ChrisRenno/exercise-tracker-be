@@ -1,5 +1,8 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
+
+admin.initializeApp();
+
 const addWorkout = require("./addWorkout");
 const getWorkoutsByUserId = require("./getWorkoutsByUserId");
 const getSingleWorkout = require("./getSingleWorkout");
@@ -8,7 +11,6 @@ exports.addWorkout = addWorkout.addWorkout;
 exports.getWorkoutsByUserId = getWorkoutsByUserId.getWorkoutsByUserId;
 exports.getSingleWorkout = getSingleWorkout.getSingleWorkout;
 
-admin.initializeApp();
 const db = admin.firestore();
 
 // Function to add JSON data to Firestore
