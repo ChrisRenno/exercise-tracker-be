@@ -27,13 +27,25 @@ exports.getWorkoutsByUserId = functions.https.onRequest((req, res) => {
     }
     try {
       const userId = req.query.userId;
+      const limit = parseInt(req.query.limit, 10) || 10;
+      const lastVisible = req.query.lastVisible;
       if (!userId) {
         return res.status(400).send("User ID is required");
       }
 
-      const snapshot = await db.collection("workouts")
-          .where("userID", "==", userId).orderBy("date", "desc").get();
-      const data = snapshot.docs.map((doc) => doc.data());
+      let query = db.collection("workouts")
+          .where("userID", "==", userId)
+          .orderBy("date", "desc")
+          .limit(limit);
+
+      if (lastVisible) {
+        const lastVisibleDoc = await db.collection("workouts")
+            .doc(lastVisible).get();
+        query = query.startAfter(lastVisibleDoc);
+      }
+
+      const snapshot = await query.get();
+      const data = snapshot.docs.map((doc) => ({fbid: doc.id, ...doc.data()}));
       res.status(200).json(data);
     } catch (error) {
       res.status(500).send(error.toString());
