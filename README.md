@@ -1,4 +1,4 @@
-Backend fuctions for the training weak project
+Backend functions for the training weak project
 
 To deploy
 
