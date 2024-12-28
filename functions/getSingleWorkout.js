@@ -44,7 +44,9 @@ exports.getSingleWorkout = functions.https.onRequest((req, res) => {
         return res.status(404).send("Workout not found");
       }
 
-      const data = querySnapshot.docs[0].data();
+      const doc = querySnapshot.docs[0];
+      const data = {fbid: doc.id, ...doc.data()};
+
       res.status(200).json(data);
     } catch (error) {
       res.status(500).send(error.toString());

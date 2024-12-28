@@ -1,18 +1,35 @@
 const admin = require("firebase-admin");
+const functions = require("firebase-functions");
+const cors = require("cors");
 
 const db = admin.firestore();
+const corsOptions = {
+  origin: true,
+  methods: ["GET", "POST", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
 
-/**
- * Deletes a workout from the Firestore database.
- * @param {string} workoutId - The ID of the workout to delete.
- */
-async function deleteWorkout(workoutId) {
-  try {
-    await db.collection("workouts").doc(workoutId).delete();
-    console.log(`Workout with ID: ${workoutId} has been deleted.`);
-  } catch (error) {
-    console.error("Error deleting workout:", error);
-  }
-}
+exports.deleteWorkout = functions.https.onRequest((req, res) => {
+  cors(corsOptions)(req, res, async () => {
+    const workoutId = req.query.id;
 
-module.exports = deleteWorkout;
+    if (!workoutId) {
+      return res.status(400).send({message: "Invalid workout ID", query: req});
+    }
+
+    try {
+      const workoutRef = db.collection("workouts").doc(workoutId);
+      const doc = await workoutRef.get();
+
+      if (!doc.exists) {
+        return res.status(404).send({message: "Workout not found"});
+      }
+
+      await workoutRef.delete();
+      res.status(200).send({message: "Workout deleted successfully"});
+    } catch (error) {
+      res.status(500)
+          .send({message: "Internal Server Error", error: error.message});
+    }
+  });
+});

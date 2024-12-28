@@ -6,10 +6,12 @@ admin.initializeApp();
 const addWorkout = require("./addWorkout");
 const getWorkoutsByUserId = require("./getWorkoutsByUserId");
 const getSingleWorkout = require("./getSingleWorkout");
+const deleteWorkout = require("./deleteWorkout");
 
 exports.addWorkout = addWorkout.addWorkout;
 exports.getWorkoutsByUserId = getWorkoutsByUserId.getWorkoutsByUserId;
 exports.getSingleWorkout = getSingleWorkout.getSingleWorkout;
+exports.deleteWorkout = deleteWorkout.deleteWorkout;
 
 const db = admin.firestore();
 
