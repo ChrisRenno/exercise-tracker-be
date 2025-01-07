@@ -18,13 +18,6 @@ const corsOptions = {
   allowedHeaders: ["Content-Type", "Authorization"],
 };
 
-
-// const corsOptions = {
-//   origin: true,
-//   methods: ["GET", "POST", "DELETE"],
-//   allowedHeaders: ["Content-Type", "Authorization"],
-// };
-
 exports.deleteWorkout = functions.https.onRequest((req, res) => {
   cors(corsOptions)(req, res, async () => {
     const workoutId = req.query.id;
@@ -42,13 +35,6 @@ exports.deleteWorkout = functions.https.onRequest((req, res) => {
       if (fileName) {
         const deleteRef = admin.storage().bucket("weights-tss.appspot.com")
             .file(`workouts/${folderName}/${fileName}`);
-
-        //   deleteRef.delete().then(() => {
-        //     console.log("File deleted successfully");
-        //   }).catch((error) => {
-        //     console.error("Error deleting file:", error);
-        //   });
-        // }
 
         await deleteRef.delete();
       }
